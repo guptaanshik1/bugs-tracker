@@ -4,7 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import IssueAction from "./IssueAction";
 
-const loading = () => {
+const LoadingIssueList = () => {
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   return (
@@ -47,4 +47,4 @@ const loading = () => {
   );
 };
 
-export default loading;
+export default LoadingIssueList;
