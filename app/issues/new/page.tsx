@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/api/issues/schema";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type TIssueForm = z.infer<typeof createIssueSchema>;
 
@@ -50,11 +51,7 @@ const NewIssuePage = () => {
           placeholder="Enter Title...."
           {...register(createIssueFieldsConstants.TITLE as "title")}
         />
-        {errors.title && (
-          <Text color="red" as="p">
-            {errors.title.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name={createIssueFieldsConstants.DESCRIPTION as "description"}
           control={control}
@@ -62,11 +59,7 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Enter Description...." {...field} />
           )}
         />
-        {errors.description && (
-          <Text color="red" as="p">
-            {errors.description.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button disabled={!isValid}>Submit New Issue</Button>
       </form>
     </div>
