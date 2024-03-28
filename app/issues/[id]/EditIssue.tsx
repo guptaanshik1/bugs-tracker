@@ -10,9 +10,8 @@ interface IProps {
 const EditIssue = ({ issueId }: IProps) => {
   return (
     <Button>
-      <Link href={`/issues/${issueId}/edit`}>
-        <Pencil2Icon /> Edit Issue
-      </Link>
+      <Pencil2Icon />
+      <Link href={`/issues/${issueId}/edit`}>Edit Issue</Link>
     </Button>
   );
 };
