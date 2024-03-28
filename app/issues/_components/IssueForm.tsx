@@ -12,12 +12,8 @@ import { createIssueSchema } from "@/app/api/issues/schema";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
-import dynamic from "next/dynamic";
 import { Issue } from "@prisma/client";
-
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
+import SimpleMdeReact from "react-simplemde-editor";
 
 type TIssueForm = z.infer<typeof createIssueSchema>;
 
@@ -71,7 +67,7 @@ const IssueForm = ({ issue }: IProps) => {
           defaultValue={issue?.description}
           control={control}
           render={({ field }) => (
-            <SimpleMDE placeholder="Enter Description...." {...field} />
+            <SimpleMdeReact placeholder="Enter Description...." {...field} />
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
