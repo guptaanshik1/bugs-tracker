@@ -14,7 +14,6 @@ const IssueDetailPage = async ({ params: { id } }: IProps) => {
     where: { id: +id },
   });
 
-  console.log({ issue });
   if (!issue) notFound();
 
   return (
