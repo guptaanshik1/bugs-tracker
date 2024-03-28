@@ -42,7 +42,8 @@ const IssueForm = ({ issue }: IProps) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setIsLoading(true);
-      await axios.post("/api/issues", data);
+      if (issue) await axios.put(`/api/issues/${issue?.id}`, data);
+      else await axios.post("/api/issues", data);
       router.push("/issues");
     } catch (error) {
       setIsLoading(false);
@@ -74,7 +75,8 @@ const IssueForm = ({ issue }: IProps) => {
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button type="submit" disabled={!isValid || isLoading}>
-          Submit New Issue {isLoading && <Spinner />}
+          {issue ? "Update Issue" : "Submit New Issue"}
+          {isLoading && <Spinner />}
         </Button>
       </form>
     </div>
