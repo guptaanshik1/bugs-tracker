@@ -1,14 +1,13 @@
 "use client";
-import { Box, Container, Flex } from "@radix-ui/themes";
+import { Container, Flex } from "@radix-ui/themes";
 import classNames from "classnames";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { AiFillBug } from "react-icons/ai";
-import { useSession } from "next-auth/react";
+import AuthStatus from "./components/AuthStatus";
 
 const Navbar = () => {
-  const { status, data: session } = useSession();
   const currentPath = usePathname(); // browser api
 
   const links: Array<{ label: string; href: string }> = [
@@ -42,14 +41,7 @@ const Navbar = () => {
             </ul>
           </Flex>
           <Flex>
-            <Box>
-              {status === "authenticated" && (
-                <Link href={"/api/auth/signout"}>Sign Out</Link>
-              )}
-              {status === "unauthenticated" && (
-                <Link href={"/api/auth/signin"}>Sign In</Link>
-              )}
-            </Box>
+            <AuthStatus />
           </Flex>
         </Flex>
       </Container>
