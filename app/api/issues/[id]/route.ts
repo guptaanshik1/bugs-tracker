@@ -32,3 +32,20 @@ export const PUT = async (
 
   return getPostResponse(updatedIssue, 200);
 };
+
+export const DELETE = async (
+  _request: NextRequest,
+  { params: { id } }: IParams
+) => {
+  const issue = await prisma.issue.findUnique({
+    where: { id: +id },
+  });
+
+  if (!issue) return getPostResponse("Issue not found", 404);
+
+  await prisma.issue.delete({
+    where: { id: issue?.id },
+  });
+
+  return getPostResponse({}, 200);
+};

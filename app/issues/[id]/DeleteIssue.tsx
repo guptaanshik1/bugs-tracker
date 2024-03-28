@@ -1,7 +1,10 @@
 "use client";
 
+import Spinner from "@/app/components/Spinner";
 import { AlertDialog, Button, Flex } from "@radix-ui/themes";
-import React from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { AiTwotoneDelete } from "react-icons/ai";
 
 interface IProps {
@@ -9,12 +12,29 @@ interface IProps {
 }
 
 const DeleteIssue = ({ issueId }: IProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const router = useRouter();
+
+  const handleIssueDelete = async () => {
+    try {
+      setIsLoading(true);
+      await axios.delete(`/api/issues/${issueId}`);
+      router.push("/issues");
+      router.refresh();
+    } catch (error) {
+      setIsLoading(false);
+      setError(true);
+    }
+  };
+
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger>
-        <Button color="red">
+        <Button disabled={isLoading} color="red" onClick={handleIssueDelete}>
           <AiTwotoneDelete />
           Delete Issue
+          {isLoading && <Spinner />}
         </Button>
       </AlertDialog.Trigger>
 
