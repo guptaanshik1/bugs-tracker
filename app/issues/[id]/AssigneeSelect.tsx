@@ -1,16 +1,36 @@
 "use client";
 
+import { User } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const AssigneeSelect = () => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await axios.get<User[]>("/api/user");
+        setUsers(data?.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchUsers();
+  }, []);
+
   return (
     <Select.Root>
       <Select.Trigger placeholder="Assign...." />
       <Select.Content>
         <Select.Group>
           <Select.Label>Suggestions</Select.Label>
-          <Select.Item value={"1"}>Anshik Gupta</Select.Item>
+          {users?.map((user) => (
+            <Select.Item key={user?.id} value={user?.id}>
+              {user?.name}
+            </Select.Item>
+          ))}
         </Select.Group>
       </Select.Content>
     </Select.Root>
