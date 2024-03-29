@@ -5,12 +5,15 @@ import React from "react";
 import IssueDetails from "./IssueDetails";
 import EditIssue from "./EditIssue";
 import DeleteIssue from "./DeleteIssue";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/auth/authOptions";
 
 interface IProps {
   params: { id: string };
 }
 
 const IssueDetailPage = async ({ params: { id } }: IProps) => {
+  const session = await getServerSession(authOptions);
   const issue = await prisma.issue.findUnique({
     where: { id: +id },
   });
@@ -22,12 +25,14 @@ const IssueDetailPage = async ({ params: { id } }: IProps) => {
       <Box className="md:col-span-4">
         <IssueDetails issue={issue} />
       </Box>
-      <Box className="col-span-1">
-        <Flex direction={"column"} gap="5">
-          <EditIssue issueId={issue?.id} />
-          <DeleteIssue issueId={issue?.id} />
-        </Flex>
-      </Box>
+      {session && (
+        <Box className="col-span-1">
+          <Flex direction={"column"} gap="5">
+            <EditIssue issueId={issue?.id} />
+            <DeleteIssue issueId={issue?.id} />
+          </Flex>
+        </Box>
+      )}
     </Grid>
   );
 };
