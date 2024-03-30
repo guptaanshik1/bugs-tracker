@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { createIssueSchema } from "../schema";
+import { createIssueSchema, issueSchema } from "../schema";
 import prisma from "@/prisma/client";
 import { getPostResponse } from "@/utils/server/getResponseObject";
 import authOptions from "@/app/auth/authOptions";
@@ -17,10 +17,19 @@ export const PUT = async (
   if (!session) return getPostResponse({}, 401);
 
   const body = await request.json();
-  const validation = createIssueSchema.safeParse(body);
+  const validation = issueSchema.safeParse(body);
 
   if (!validation.success)
     return getPostResponse(validation.error?.format(), 400);
+
+  const { title, description, assignedToUserId } = body;
+
+  if (assignedToUserId) {
+    const user = await prisma.user.findUnique({
+      where: { id: assignedToUserId },
+    });
+    if (!user) return getPostResponse("No user found", 400);
+  }
 
   const issue = await prisma.issue.findUnique({
     where: {
@@ -32,7 +41,7 @@ export const PUT = async (
 
   const updatedIssue = await prisma.issue.update({
     where: { id: +id },
-    data: { title: body.title, description: body.description },
+    data: { title, description, assignedToUserId },
   });
 
   return getPostResponse(updatedIssue, 200);
