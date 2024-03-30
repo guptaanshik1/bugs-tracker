@@ -1,33 +1,21 @@
 "use client";
 
 import { UNASSIGNED } from "@/utils/client/constants/constants";
-import { Issue, User } from "@prisma/client";
+import { Issue } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { toast, Toaster } from "react-hot-toast";
+import { useUsers } from "../_hooks/useUser";
 
 interface IProps {
   issue: Issue;
 }
 
 const AssigneeSelect = ({ issue }: IProps) => {
-  const getUsers = async () => {
-    const { data } = await axios.get<User[]>("/api/user");
-    return data;
-  };
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useQuery<User[]>({
-    queryKey: ["users"],
-    queryFn: getUsers,
-    staleTime: 60 * 1000,
-  });
+  const { users, error, isLoading } = useUsers();
 
   const handleIssueAssign = async (userId: string) => {
     try {
