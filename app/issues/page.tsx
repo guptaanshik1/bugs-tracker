@@ -5,6 +5,7 @@ import IssueStatusBadge from "../components/IssueStatusBadge";
 import IssueAction from "./IssueAction";
 import Link from "../components/Link";
 import { Status } from "@prisma/client";
+import { statuses } from "@/utils/client/filterStatusMapper";
 
 interface IProps {
   searchParams: {
@@ -13,7 +14,9 @@ interface IProps {
 }
 
 const IssuesPage = async ({ searchParams: { status } }: IProps) => {
-  const issues = await prisma.issue.findMany({ where: { status } });
+  const issues = await prisma.issue.findMany({
+    where: { status: statuses.includes(status) ? status : undefined },
+  });
 
   return (
     <div>

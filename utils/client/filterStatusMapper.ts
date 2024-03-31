@@ -9,3 +9,5 @@ export const filterStatusMapper: Array<{
   { label: "Closed", value: "CLOSED" },
   { label: "In Progress", value: "IN_PROGRESS" },
 ];
+
+export const statuses = Object.values(Status);
