@@ -7,15 +7,13 @@ import Link from "../components/Link";
 import { Issue, Status } from "@prisma/client";
 import { statuses } from "@/utils/client/filterStatusMapper";
 import { issueTableColumns } from "@/utils/client/issueTableColumns";
-import NextLink from "next/link";
+
 import Pagination from "../components/Pagination";
+import IssuesTable from "./IssuesTable";
+import { IIssueQuery } from "@/utils/client/data/IssueQuery";
 
 interface IProps {
-  searchParams: {
-    status: Status;
-    orderBy: keyof Issue;
-    page: string;
-  };
+  searchParams: IIssueQuery;
 }
 
 const pageSize = 10;
@@ -46,46 +44,7 @@ const IssuesPage = async ({ searchParams }: IProps) => {
   return (
     <div>
       <IssueAction />
-      <Table.Root variant="surface" mb="5">
-        <Table.Header>
-          <Table.Row>
-            {issueTableColumns.map((column) => (
-              <Table.ColumnHeaderCell
-                key={column?.value}
-                className={column?.className}
-              >
-                <NextLink
-                  href={{
-                    query: { ...searchParams, orderBy: column?.value },
-                  }}
-                >
-                  {column?.label}
-                </NextLink>
-              </Table.ColumnHeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {issues?.map((issue) => {
-            return (
-              <Table.Row key={issue?.id}>
-                <Table.Cell>
-                  <Link href={`/issues/${issue?.id}`}>{issue?.title}</Link>
-                  <div className="block md:hidden">
-                    <IssueStatusBadge status={issue?.status} />
-                  </div>
-                </Table.Cell>
-                <Table.Cell className="hidden md:table-cell">
-                  {issue?.createdAt.toDateString()}
-                </Table.Cell>
-                <Table.Cell className="hidden md:table-cell">
-                  <IssueStatusBadge status={issue?.status} />
-                </Table.Cell>
-              </Table.Row>
-            );
-          })}
-        </Table.Body>
-      </Table.Root>
+      <IssuesTable searchParams={searchParams} issues={issues} />
       <Pagination
         pageSize={pageSize}
         currentPage={page}
