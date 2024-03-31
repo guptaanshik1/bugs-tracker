@@ -6,6 +6,8 @@ import IssueAction from "./IssueAction";
 import Link from "../components/Link";
 import { Status } from "@prisma/client";
 import { statuses } from "@/utils/client/filterStatusMapper";
+import { issueTableColumns } from "@/utils/client/issueTableColumns";
+import NextLink from "next/link";
 
 interface IProps {
   searchParams: {
@@ -13,9 +15,13 @@ interface IProps {
   };
 }
 
-const IssuesPage = async ({ searchParams: { status } }: IProps) => {
+const IssuesPage = async ({ searchParams }: IProps) => {
   const issues = await prisma.issue.findMany({
-    where: { status: statuses.includes(status) ? status : undefined },
+    where: {
+      status: statuses.includes(searchParams.status)
+        ? searchParams.status
+        : undefined,
+    },
   });
 
   return (
@@ -24,13 +30,20 @@ const IssuesPage = async ({ searchParams: { status } }: IProps) => {
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Status
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Created
-            </Table.ColumnHeaderCell>
+            {issueTableColumns.map((column) => (
+              <Table.ColumnHeaderCell
+                key={column?.value}
+                className={column?.className}
+              >
+                <NextLink
+                  href={{
+                    query: { ...searchParams, orderBy: column?.value },
+                  }}
+                >
+                  {column?.label}
+                </NextLink>
+              </Table.ColumnHeaderCell>
+            ))}
           </Table.Row>
         </Table.Header>
         <Table.Body>
