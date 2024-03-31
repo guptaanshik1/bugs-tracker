@@ -8,15 +8,20 @@ import { Issue, Status } from "@prisma/client";
 import { statuses } from "@/utils/client/filterStatusMapper";
 import { issueTableColumns } from "@/utils/client/issueTableColumns";
 import NextLink from "next/link";
+import Pagination from "../components/Pagination";
 
 interface IProps {
   searchParams: {
     status: Status;
     orderBy: keyof Issue;
+    page: string;
   };
 }
 
+const pageSize = 10;
+
 const IssuesPage = async ({ searchParams }: IProps) => {
+  const page = +searchParams.page || 1;
   const appliedOrderBy = issueTableColumns
     .map((column) => column.value)
     .includes(searchParams.orderBy)
@@ -30,12 +35,18 @@ const IssuesPage = async ({ searchParams }: IProps) => {
         : undefined,
     },
     orderBy: appliedOrderBy,
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+  });
+
+  const issueCount = await prisma.issue.count({
+    where: { status: searchParams.status },
   });
 
   return (
     <div>
       <IssueAction />
-      <Table.Root variant="surface">
+      <Table.Root variant="surface" mb="5">
         <Table.Header>
           <Table.Row>
             {issueTableColumns.map((column) => (
@@ -75,6 +86,11 @@ const IssuesPage = async ({ searchParams }: IProps) => {
           })}
         </Table.Body>
       </Table.Root>
+      <Pagination
+        pageSize={pageSize}
+        currentPage={page}
+        itemCount={issueCount}
+      />
     </div>
   );
 };
