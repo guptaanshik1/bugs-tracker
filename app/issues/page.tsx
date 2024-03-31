@@ -4,7 +4,7 @@ import React from "react";
 import IssueStatusBadge from "../components/IssueStatusBadge";
 import IssueAction from "./IssueAction";
 import Link from "../components/Link";
-import { Status } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
 import { statuses } from "@/utils/client/filterStatusMapper";
 import { issueTableColumns } from "@/utils/client/issueTableColumns";
 import NextLink from "next/link";
@@ -12,16 +12,24 @@ import NextLink from "next/link";
 interface IProps {
   searchParams: {
     status: Status;
+    orderBy: keyof Issue;
   };
 }
 
 const IssuesPage = async ({ searchParams }: IProps) => {
+  const appliedOrderBy = issueTableColumns
+    .map((column) => column.value)
+    .includes(searchParams.orderBy)
+    ? { [searchParams.orderBy]: "asc" }
+    : undefined;
+
   const issues = await prisma.issue.findMany({
     where: {
       status: statuses.includes(searchParams.status)
         ? searchParams.status
         : undefined,
     },
+    orderBy: appliedOrderBy,
   });
 
   return (
