@@ -11,3 +11,15 @@ export const getStatusSummaryMapper = (
     { label: "In Progress Issues", value: inProgress, status: "IN_PROGRESS" },
   ];
 };
+
+export const getStatusChartMapper = (
+  open: number,
+  closed: number,
+  inProgress: number
+): Array<{ label: string; value: number }> => {
+  return [
+    { label: "Open Issues", value: open },
+    { label: "Closed Issues", value: closed },
+    { label: "In Progress Issues", value: inProgress },
+  ];
+};
