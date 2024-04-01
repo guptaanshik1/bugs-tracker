@@ -24,7 +24,12 @@ const IssuesTable = ({ searchParams, issues }: IProps) => {
             >
               <NextLink
                 href={{
-                  query: { ...searchParams, orderBy: column?.value },
+                  query: {
+                    ...searchParams,
+                    orderBy: column?.value,
+                    orderType:
+                      searchParams.orderType === "asc" ? "desc" : "asc",
+                  },
                 }}
               >
                 {column?.label}

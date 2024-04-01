@@ -17,8 +17,10 @@ const IssueStatusFilter = () => {
     }
     const params = new URLSearchParams();
     if (status) params.append("status", status);
-    if (searchParams.get("orderBy"))
+    if (searchParams.get("orderBy")) {
       params.append("orderBy", searchParams.get("orderBy")!);
+      params.append("orderType", searchParams.get("orderType")!);
+    }
     const query = params.size ? `?${params.toString()}` : "";
     router.push(`/issues/${query}`);
   };
