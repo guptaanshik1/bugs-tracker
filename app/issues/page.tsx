@@ -1,10 +1,6 @@
 import prisma from "@/prisma/client";
-import { Table } from "@radix-ui/themes";
 import React from "react";
-import IssueStatusBadge from "../components/IssueStatusBadge";
 import IssueAction from "./IssueAction";
-import Link from "../components/Link";
-import { Issue, Status } from "@prisma/client";
 import { statuses } from "@/utils/client/filterStatusMapper";
 import { issueTableColumns } from "@/utils/client/issueTableColumns";
 
