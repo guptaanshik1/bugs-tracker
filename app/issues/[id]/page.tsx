@@ -1,7 +1,7 @@
 import prisma from "@/prisma/client";
 import { Box, Flex, Grid } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
-import React from "react";
+import React, { cache } from "react";
 import IssueDetails from "./IssueDetails";
 import EditIssue from "./EditIssue";
 import DeleteIssue from "./DeleteIssue";
@@ -13,11 +13,13 @@ interface IProps {
   params: { id: string };
 }
 
+const fetchUser = cache((issueId: number) =>
+  prisma.issue.findUnique({ where: { id: issueId } })
+);
+
 const IssueDetailPage = async ({ params: { id } }: IProps) => {
   const session = await getServerSession(authOptions);
-  const issue = await prisma.issue.findUnique({
-    where: { id: +id },
-  });
+  const issue = await fetchUser(+id);
 
   if (!issue) notFound();
 
@@ -40,7 +42,7 @@ const IssueDetailPage = async ({ params: { id } }: IProps) => {
 };
 
 export async function generateMetadata({ params: { id } }: IProps) {
-  const issue = await prisma.issue.findUnique({ where: { id: +id } });
+  const issue = await fetchUser(+id);
 
   return {
     title: issue?.title,
