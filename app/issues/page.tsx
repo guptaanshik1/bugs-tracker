@@ -7,6 +7,7 @@ import { issueTableColumns } from "@/utils/client/issueTableColumns";
 import Pagination from "../components/Pagination";
 import IssuesTable from "./IssuesTable";
 import { IIssueQuery } from "@/utils/client/data/IssueQuery";
+import { Metadata } from "next";
 
 interface IProps {
   searchParams: IIssueQuery;
@@ -48,6 +49,11 @@ const IssuesPage = async ({ searchParams }: IProps) => {
       />
     </div>
   );
+};
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - Issue List",
+  description: "View all project issues.",
 };
 
 export default IssuesPage;
